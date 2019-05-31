@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.base.lib.R;
 import com.base.lib.glide.GlideManage;
 import com.base.lib.util.AppManager;
@@ -23,6 +24,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * @copyright : 深圳车发发科技有限公司
  * Created by yixf on 2017/11/13.
@@ -182,7 +184,7 @@ public class AppBaseActivity extends AppCompatActivity {
      * @param imageUrl
      */
     protected void setImageUrl(int imageId,String imageUrl){
-        GlideManage.getInstance().with(this,R.mipmap.ic_launcher,imageUrl,(ImageView)findViewById(imageId));
+        GlideManage.getInstance().with(this, R.mipmap.ic_launcher,imageUrl,(ImageView)findViewById(imageId));
     }
     /**
      * 设置TextView内容
@@ -229,7 +231,7 @@ public class AppBaseActivity extends AppCompatActivity {
      */
     public void showProgressDlg(String title, String strMessage) {
          if (null == kProgressHUD&&!isFinishing()) {
-             kProgressHUD  =KProgressHUD.create(this)
+             kProgressHUD  = KProgressHUD.create(this)
              .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
              .setCancellable(true)
              .setAnimationSpeed(2)

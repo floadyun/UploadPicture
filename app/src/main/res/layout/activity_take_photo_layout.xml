@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.base.lib.autolayout.AutoRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main">
+    <ImageView
+        android:id="@+id/main_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <com.base.lib.autolayout.AutoLinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+        <Button
+            android:id="@+id/take_photo_btn"
+            android:layout_width="650px"
+            android:layout_height="260px"
+            android:background="@drawable/bg_take_photo"
+            android:text="拍照"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_50"/>
+        <Button
+            android:id="@+id/system_setting_btn"
+            android:layout_width="650px"
+            android:layout_height="260px"
+            android:background="@drawable/bg_take_photo"
+            android:text="系统配置"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_50"
+            android:layout_marginTop="30px"/>
+    </com.base.lib.autolayout.AutoLinearLayout>
+    <Button
+        android:id="@+id/exit_btn"
+        android:layout_width="200px"
+        android:layout_height="100px"
+        android:background="@null"/>
+</com.base.lib.autolayout.AutoRelativeLayout>

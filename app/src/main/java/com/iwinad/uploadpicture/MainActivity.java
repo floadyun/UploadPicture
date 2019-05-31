@@ -1,14 +1,24 @@
 package com.iwinad.uploadpicture;
 
+import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.widget.EditText;
+
+import com.base.lib.baseui.AppBaseActivity;
+import com.base.lib.util.FileUtil;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +53,18 @@ public class MainActivity extends AppBaseActivity {
 
     private String ipString,portString,userString,passString,fileString;
 
+    private Uri imgUri;
+
+    private static final int TAKE_PHOTO = 1;
+
+    private String imagePath;
+    /**
+     * 权限数组
+     */
+    private String[] permissions = new String[]{
+            Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +84,17 @@ public class MainActivity extends AppBaseActivity {
         remote_file_text.setText(fileString);
 
         EventBus.getDefault().register(this);
+
+        checkPermissions(permissions, 1, new PermissionsResultListener() {
+            @Override
+            public void onSuccessful(int[] results) {
+
+            }
+            @Override
+            public void onFailure() {
+                showToastText("请开启应用所需权限");
+            }
+        });
     }
     @OnClick(R.id.select_picture_btn)void selectPicture(){
         PreferenceUtil.getPreference(this).setStringPreference(PreferenceUtil.DEFAULT_IP,server_ip_text.getText().toString());
@@ -69,8 +102,37 @@ public class MainActivity extends AppBaseActivity {
         PreferenceUtil.getPreference(this).setStringPreference(PreferenceUtil.REMOTE_USER,user_name_text.getText().toString());
         PreferenceUtil.getPreference(this).setStringPreference(PreferenceUtil.REMOTE_PASSWORD,user_pass_text.getText().toString());
         PreferenceUtil.getPreference(this).setStringPreference(PreferenceUtil.REMOTE_FILE_PAHT,remote_file_text.getText().toString());
-
+        takeCapture();
 //        MediaUtil.selectPicture(this, PictureMimeType.ofImage());
+    }
+
+    private void takeCapture(){
+        imagePath = Environment.getExternalStorageDirectory()+"/upload/"+System.currentTimeMillis()+".png";
+        FileUtil.createfile(imagePath);
+        //储存拍照图片file
+        File outputImage = new File(imagePath);
+
+        if (outputImage.exists()){
+            outputImage.delete();
+        }
+        try {
+            outputImage.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //
+        if (Build.VERSION.SDK_INT>=24){
+            //7.0以上新增的方法 共享文件 FileProvider是一种特殊的内容提供者
+            // 第二个参数为对应filepaths.xml中provider（内容提供者的）的name
+            imgUri = FileProvider
+                    .getUriForFile(this,"com.iwinad.uploadpicture.fileprovider",outputImage);
+        }else {
+            imgUri = Uri.fromFile(outputImage);
+        }
+        //启动相机
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,imgUri );
+        startActivityForResult(intent,TAKE_PHOTO);
     }
     List<LocalMedia> selectList;
     private int pictureSize = 0;
@@ -80,6 +142,13 @@ public class MainActivity extends AppBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                case TAKE_PHOTO:
+                    if(resultCode == RESULT_OK) {
+                        System.out.print("the image path is "+imgUri.getPath());
+                    }
+                    break;
+                default:
+                    break;
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片选择结果回调
                     selectList = PictureSelector.obtainMultipleResult(data);

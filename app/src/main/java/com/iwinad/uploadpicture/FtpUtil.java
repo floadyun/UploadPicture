@@ -45,7 +45,6 @@ public class FtpUtil {
                     ftpClient.setBufferSize(20480);
                     ftpClient.setControlEncoding("UTF-8");
                     ftpClient.enterLocalPassiveMode();
-
                     try {
                         uploadFile(index,ftpClient,fileNamePath,"");
                     } catch (Exception e) {
