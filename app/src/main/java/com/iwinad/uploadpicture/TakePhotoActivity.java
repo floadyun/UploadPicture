@@ -50,6 +50,8 @@ public class TakePhotoActivity extends AppBaseActivity {
 
     private Uri imgUri;
 
+    private int picIndex;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,15 +136,16 @@ public class TakePhotoActivity extends AppBaseActivity {
      */
     private void uploadImage(final String imagePath){
         showProgressDlg("上传图片...");
-        final String serverIp = getStringPreference(PreferenceUtil.DEFAULT_IP,"192.168.1.10");
-        final String serverPort = getStringPreference(PreferenceUtil.DEFAULT_PORT,"21");
-        final String userName = getStringPreference(PreferenceUtil.REMOTE_USER,"");
-        final String password = getStringPreference(PreferenceUtil.REMOTE_PASSWORD,"");
-        final String remotePath = getStringPreference(PreferenceUtil.REMOTE_FILE_PAHT,"/Users/admin/Desktop/Temp/test/");
         new Thread(new Runnable() {
             @Override
             public void run() {
-                FtpUtil.connectFtp(0,serverIp, serverPort, userName, password,remotePath,imagePath);
+                String serverIp = PreferenceUtil.getPreference(TakePhotoActivity.this).getStringPreference(PreferenceUtil.DEFAULT_IP,"192.168.1.10");
+                String serverPort = PreferenceUtil.getPreference(TakePhotoActivity.this).getStringPreference(PreferenceUtil.DEFAULT_PORT,"21");
+                String userName = PreferenceUtil.getPreference(TakePhotoActivity.this).getStringPreference(PreferenceUtil.REMOTE_USER,"");
+                String password = PreferenceUtil.getPreference(TakePhotoActivity.this).getStringPreference(PreferenceUtil.REMOTE_PASSWORD,"");
+                String remotePath = PreferenceUtil.getPreference(TakePhotoActivity.this).getStringPreference(PreferenceUtil.REMOTE_FILE_PAHT,"C:/ftpRoot");
+                FtpUtil.connectFtp(picIndex,serverIp, serverPort, userName, password,remotePath,imagePath);
+                picIndex++;
             }
         }).start();
     }

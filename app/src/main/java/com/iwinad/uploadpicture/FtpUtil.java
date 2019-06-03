@@ -82,10 +82,9 @@ public class FtpUtil {
             Logger.e("本地文件不存在");
             return ;
         }
-        String fileNames[] = localFile.getName().split(".");
-        String endName = fileNames[fileNames.length-1];
-        String fileName = System.currentTimeMillis()+index+"."+endName;
-        Logger.e("the file name is "+fileName);
+//        String fileNames[] = localFile.getName().split(".");
+        String fileName = localFile.getName();
+//        String fileName = System.currentTimeMillis()+index+"."+endName;
         // 如果本地文件存在，服务器文件也在，上传文件，这个方法中也包括了断点上传
         long localSize = localFile.length(); // 本地文件的长度
         FTPFile[] files = ftpClient.listFiles(fileName);

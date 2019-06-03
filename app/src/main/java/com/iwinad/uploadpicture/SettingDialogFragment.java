@@ -29,6 +29,12 @@ public class SettingDialogFragment extends BaseDialogFragment{
     @Override
     protected void initView() {
         setDialogView(R.layout.dialog_setting_layout);
+
+        ipText.setText(PreferenceUtil.getPreference(getContext()).getStringPreference(PreferenceUtil.DEFAULT_IP,ipText.getText().toString()));
+        portText.setText(PreferenceUtil.getPreference(getContext()).getStringPreference(PreferenceUtil.DEFAULT_PORT,portText.getText().toString()));
+        userText.setText(PreferenceUtil.getPreference(getContext()).getStringPreference(PreferenceUtil.REMOTE_USER,userText.getText().toString()));
+        passwordText.setText(PreferenceUtil.getPreference(getContext()).getStringPreference(PreferenceUtil.REMOTE_PASSWORD,passwordText.getText().toString()));
+        pathText.setText(PreferenceUtil.getPreference(getContext()).getStringPreference(PreferenceUtil.REMOTE_FILE_PAHT,pathText.getText().toString()));
     }
     /**
      * 关闭
